@@ -1,13 +1,14 @@
-antlib >= 1.1b0; sys_platform == 'win32'
-click
-crcmod
-ecdsa
-intelhex
-libusb1==1.9.3
-pc_ble_driver_py >= 0.16.4
-piccata
-protobuf >=3.17.3, < 4.0.0
-pyserial
-pyspinel >= 1.0.0a3
-pyyaml
-tqdm
+sudo pip3 install pc_ble_driver_py
+sudo pip3 install intelhex
+sudo pip3 install protobuf
+sudo pip3 install pyserial==3.5
+sudo pip3 install pyspinel==1.0.3
+sudo pip3 install PyYAML==5.4.1
+sudo pip3 install tqdm==4.62.0
+sudo pip3 install antlib==1.1b1
+sudo pip3 install click==8.0.1
+sudo pip3 install crcmod==1.7
+sudo pip3 install ecdsa==0.17.0
+sudo pip3 install intelhex==2.3.0
+sudo pip3 install libusb1==1.9.3
+sudo pip3 install piccata==2.0.1
