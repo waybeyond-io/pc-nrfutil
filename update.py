@@ -5,6 +5,9 @@ import time
 import logging
 import re
 import serial
+import subprocess
+import signal
+from datetime import datetime as dt
 
 from nordicsemi.dfu.bl_dfu_sett import BLDFUSettings
 from nordicsemi.dfu.dfu import Dfu
@@ -70,11 +73,29 @@ def usb_serial(package, port, connect_delay, flow_control, packet_receipt_notifi
     do_serial(package, port, connect_delay, flow_control, packet_receipt_notification, baud_rate, serial_number, False,
               timeout)
 
-ser = serial.Serial('/dev/ttyACM0')  # open serial port
-print(ser.name)         # check which port was really used
-ser.write(b'AT ENTERBL\r\n')     # write a string
-ser.close()             # close port
+# Stop greengrass so that we can access the serial port
+os.system("sudo systemctl stop greengrass") 
 
+# open the dongle serial port
+ser = serial.Serial('/dev/ttyACM0')  
+
+# Send the bootloader command
+ser.write(b'AT ENTERBL\r\n')
+
+#  Close the port
+ser.close()
+
+# Get the firmware file path
 zip_file_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'Folium_Dongle-2-6-2-OTA-Image.zip')
 
-usb_serial(zip_file_path, '/dev/ttyACM0', None, None, None, None, None, None)
+# Nordic library handles the rest
+try:
+    usb_serial(zip_file_path, '/dev/ttyACM0', None, None, None, None, None, None)
+except():
+    print("Failed to update the dongle firmware.")
+    print("Restarting Greengrass.")
+
+# TODO if the update fails can the dongle be stuck in BL mode?
+
+# Run greengrass again.
+os.system("sudo systemctl start greengrass") 
